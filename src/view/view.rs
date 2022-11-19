@@ -1,17 +1,15 @@
 use wasm_bindgen::JsValue;
 use web_sys::Element;
-use super::*;
 
-pub struct View {
-    pub parent: Box<dyn buildable::Buildable>,
-    pub child: Box<dyn buildable::Buildable>,
-    pub padding: size::Edge,
-    pub margin: size::Edge,
-    pub size: size::Size,
+pub trait Viewable {
+    fn build(&self, document: &web_sys::Document) -> Result<Element, Error>;
 }
 
-impl buildable::Buildable for View {
-    fn build(&self, document: &web_sys::Document) -> Result<Element, JsValue> {
-        todo!()
-    }
+#[derive(Debug)]
+#[derive(thiserror::Error)]
+pub enum Error {
+    #[error("Failed to get body")]
+    NoBodyFound,
+    #[error("Failed to create element")]
+    ElementCreation,
 }

@@ -1,12 +1,74 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>hello-wasm example</title>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            display: flex;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        div {
+            display: flex;
+            width: fit-content;
+            height: fit-content;
+        }
+
+        body {
+            background-color: red;
+            /*justify-content: space-between;*/
+            /*align-items: center;*/
+            /*flex-direction: column;*/
+        }
+
+        .child {
+            background-color: white;
+            flex-direction: column;
+        }
+
+        .child2 {
+            background-color: white;
+            flex-direction: column;
+        }
+
+        .item {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
+
+<div class="child">
+    <p>Child1</p>
+    <div class="child2">
+        <p class="item">Child1</p>
+        <p class="item">Child2</p>
+        <p class="item">Child3</p>
+    </div>
+    <p>Child3</p>
+</div>
+
+<div class="child">
+    <p>Child1</p>
+    <div class="child2">
+        <p class="item">Child1</p>
+        <p class="item">Child2</p>
+        <p class="item">Child3</p>
+    </div>
+    <p>Child3</p>
+</div>
+
 <script type="module">
-    import init, { main } from "./pkg/ui.js";
+    import init, {main} from "./pkg/ui.js";
+
     init().then(() => {
         main();
     });

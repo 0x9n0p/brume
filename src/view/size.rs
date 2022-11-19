@@ -1,6 +1,3 @@
-// TODO
-pub const MAX_SIZE: Size = Size { height: 0, width: 0 };
-
 pub struct Edge {
     pub top: u32,
     pub right: u32,
@@ -8,7 +5,19 @@ pub struct Edge {
     pub bottom: u32,
 }
 
-pub struct Size {
-    pub height: u32,
-    pub width: u32,
+impl Edge {
+    pub fn new() -> Edge {
+        Edge{
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0
+        }
+    }
+}
+
+pub enum Size {
+    MatchParent,
+    WrapContent,
+    Pixel(i32)
 }

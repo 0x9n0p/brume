@@ -1,56 +1,38 @@
 use wasm_bindgen::JsValue;
-use web_sys::Element;
-use super::*;
+use web_sys;
+use crate::view::{size, view};
+use crate::view::size::Size;
 
 pub struct Body {
-    title: String,
-    view: view::View,
+    child: Box<dyn view::Viewable>,
+    pub padding: size::Edge,
+    pub margin: size::Edge,
+    pub width: Size,
+    pub height: Size,
 }
 
 impl Body {
-    pub fn new(title: String, size: size::Size, child: Box<dyn buildable::Buildable>) -> Box<dyn buildable::Buildable> {
-        Box::new(Body {
-            title,
-            view: view::View {
-                parent: Space::new(size::Size { height: 0, width: 0 }),
-                child,
-                padding: size::Edge {
-                    top: 0,
-                    right: 0,
-                    left: 0,
-                    bottom: 0,
-                },
-                margin: size::Edge {
-                    top: 0,
-                    right: 0,
-                    left: 0,
-                    bottom: 0,
-                },
-                size,
-            },
-        })
+    pub fn new(child: Box<dyn view::Viewable>) -> Body {
+        Body {
+            child,
+            padding: size::Edge::new(),
+            margin: size::Edge::new(),
+            width: Size::MatchParent,
+            height: Size::MatchParent,
+        }
     }
 }
 
-impl buildable::Buildable for Body {
-    fn build(&self, document: &web_sys::Document) -> Result<Element, JsValue> {
-        todo!()
-    }
-}
+impl view::Viewable for Body {
+    fn build(&self, document: &web_sys::Document) -> Result<web_sys::Element, view::Error> {
+        let mut body = document.body().ok_or(view::Error::NoBodyFound)? as web_sys::HtmlElement;
 
-pub struct Space {
-    size: size::Size,
-}
+        let child = self.child.build(document)?;
+        body.append_child(&child);
 
-impl Space {
-    pub fn new(size: size::Size) -> Box<dyn buildable::Buildable> {
-        Box::new(Space { size })
-    }
-}
+        // body.style().set_property("background-color", "yellow");
 
-impl buildable::Buildable for Space {
-    fn build(&self, document: &web_sys::Document) -> Result<Element, JsValue> {
-        todo!()
+        Ok(web_sys::Element::from(body))
     }
 }
 
@@ -59,14 +41,17 @@ pub struct Text {
 }
 
 impl Text {
-    pub fn new(str: String) -> Box<dyn buildable::Buildable> {
-        Box::new(Text { str })
+    pub fn new(str: String) -> Text {
+        Text { str }
     }
 }
 
-impl buildable::Buildable for Text {
-    fn build(&self, document: &web_sys::Document) -> Result<Element, JsValue> {
-        let val = document.create_element("p")?;
+impl view::Viewable for Text {
+    fn build(&self, document: &web_sys::Document) -> Result<web_sys::Element, view::Error> {
+        let val = match document.create_element("p") {
+            Ok(e) => e,
+            Err(_) => return Err(view::Error::ElementCreation),
+        };
         val.set_text_content(Some(&self.str));
         return Ok(val);
     }
