@@ -21,6 +21,10 @@ impl Body {
             height: Size::MatchParent,
         }
     }
+
+    pub fn make(self) -> Box<dyn view::Viewable> {
+        return Box::new(self);
+    }
 }
 
 impl view::Viewable for Body {
@@ -43,6 +47,10 @@ pub struct Text {
 impl Text {
     pub fn new(str: String) -> Text {
         Text { str }
+    }
+
+    pub fn make(self) -> Box<dyn view::Viewable> {
+        return Box::new(self);
     }
 }
 

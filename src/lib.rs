@@ -9,6 +9,11 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 pub fn main() {
     Window::new().expect("Failed to init window")
-        .body(Box::new(Body::new( Box::new(Text::new("Hello".to_string())))))
+        // .body(Box::new(Body::new(
+        //     Box::new(Text::new("Hello".to_string()))
+        // )))
+        .body(Body::new(
+            Text::new("Hello".to_string()).make()
+        ).make())
         .build().expect("Failed to build window");
 }
