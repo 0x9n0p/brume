@@ -1,4 +1,4 @@
-use super::view::{buildable};
+use crate::view::buildable;
 
 pub struct Window {
     document: web_sys::Document,

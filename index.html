@@ -6,9 +6,9 @@
 </head>
 <body>
 <script type="module">
-    import init, { build } from "./pkg/ui.js";
+    import init, { main } from "./pkg/ui.js";
     init().then(() => {
-        build("WebAssembly");
+        main();
     });
 </script>
 </body>
