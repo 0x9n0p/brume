@@ -2,17 +2,18 @@ use std::fmt::Error;
 use web_sys::HtmlElement;
 use crate::view::size::Size;
 use crate::view::{view, widget};
+use crate::window::page;
 
 pub struct Window {
-    body: Box<dyn view::Viewable>,
+    page: Box<dyn page::Page>,
     document: web_sys::Document,
 }
 
 impl Window {
-    pub fn new() -> Option<Window> {
+    pub fn new(page: Box<dyn page::Page>) -> Option<Window> {
         let window = web_sys::window()?;
         let document = window.document()?;
-        Some(Window { body: Box::new(widget::Text::new("Hello".to_string())), document })
+        Some(Window { page, document })
     }
 
     pub fn build(self) -> Result<Window, view::Error> {
@@ -40,12 +41,9 @@ impl Window {
         // // let val = document.create_element("p")?;
         // // val.set_text_content(Some("Hello from Rust!"));
         // // body.append_child(&val)?;
-        self.body.build(&self.document)?;
-        Ok(self)
-    }
 
-    pub fn body(mut self, body: Box<dyn view::Viewable>) -> Window {
-        self.body = body;
-        return self;
+        // TODO: Add header initializer here
+        self.page.body().build(&self.document)?;
+        Ok(self)
     }
 }
