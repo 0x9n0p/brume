@@ -51,13 +51,13 @@ impl view::Viewable for Body {
 }
 
 pub struct Text {
-    str: String,
+    str: &'static str,
     styles: collections::HashMap<&'static str, Box<dyn Style>>,
     html_element: Option<web_sys::HtmlElement>,
 }
 
 impl Text {
-    pub fn new(str: String) -> Text {
+    pub fn new(str: &'static str) -> Text {
         Text { str, styles: Default::default(), html_element: None }
     }
 
@@ -87,13 +87,13 @@ impl view::Viewable for Text {
 }
 
 pub struct Button {
-    str: String,
+    str: &'static str,
     styles: collections::HashMap<&'static str, Box<dyn Style>>,
     html_element: Option<web_sys::HtmlElement>,
 }
 
 impl Button {
-    pub fn new(str: String) -> Button {
+    pub fn new(str: &'static str) -> Button {
         Button {
             str,
             styles: collections::HashMap::default(),
