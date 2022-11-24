@@ -442,3 +442,115 @@ impl Style for Cursor {
         return Ok(());
     }
 }
+
+pub(crate) struct ContainerDirection {
+    name: &'static str,
+    val: &'static str,
+}
+
+impl ContainerDirection {
+    pub fn column() -> Cursor {
+        Cursor { name: "flex-direction", val: "column" }
+    }
+
+    pub fn row() -> Cursor {
+        Cursor { name: "flex-direction", val: "row" }
+    }
+}
+
+impl Style for ContainerDirection {
+    fn name(&self) -> &'static str {
+        return self.name;
+    }
+
+    fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
+        element.style().set_property(self.name, &self.val);
+        return Ok(());
+    }
+}
+
+pub struct Justify {
+    name: &'static str,
+    val: &'static str,
+}
+
+impl Justify {
+    // Items are positioned in the center of the container
+    pub fn center() -> Justify {
+        Justify { name: "justify-content", val: "center" }
+    }
+
+    // Default value. Items are positioned at the beginning of the container
+    pub fn start() -> Justify {
+        Justify { name: "justify-content", val: "flex-start" }
+    }
+
+    // Items are positioned at the end of the container
+    pub fn end() -> Justify {
+        Justify { name: "justify-content", val: "flex-end" }
+    }
+
+    // Items will have space between them
+    pub fn space_between() -> Justify {
+        Justify { name: "justify-content", val: "space-between" }
+    }
+
+    // Items will have space before, between, and after them
+    pub fn space_around() -> Justify {
+        Justify { name: "justify-content", val: "space-around" }
+    }
+
+    // Items will have equal space around them
+    pub fn space_evenly() -> Justify {
+        Justify { name: "justify-content", val: "space-evenly" }
+    }
+}
+
+impl Style for Justify {
+    fn name(&self) -> &'static str {
+        return self.name;
+    }
+
+    fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
+        element.style().set_property(self.name, &self.val);
+        return Ok(());
+    }
+}
+
+pub struct Align {
+    name: &'static str,
+    val: &'static str,
+}
+
+impl Align {
+    pub fn center() -> Align {
+        Align { name: "align-items", val: "center" }
+    }
+
+    pub fn start() -> Align {
+        Align { name: "align-items", val: "flex-start" }
+    }
+
+    pub fn end() -> Align {
+        Align { name: "align-items", val: "flex-end" }
+    }
+
+    pub fn stretch() -> Align {
+        Align { name: "align-items", val: "stretch" }
+    }
+
+    pub fn baseline() -> Align {
+        Align { name: "align-items", val: "baseline" }
+    }
+}
+
+impl Style for Align {
+    fn name(&self) -> &'static str {
+        return self.name;
+    }
+
+    fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
+        element.style().set_property(self.name, &self.val);
+        return Ok(());
+    }
+}

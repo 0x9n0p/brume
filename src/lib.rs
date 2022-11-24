@@ -9,6 +9,6 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub fn main() {
-    let w = Window::new(index::Page::new()).expect("Failed to init window");
+    let w = Window::new(index::Login::new()).expect("Failed to init window");
     w.build().expect("Failed to build window");
 }

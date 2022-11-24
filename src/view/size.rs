@@ -29,7 +29,7 @@ pub enum Size {
 impl fmt::Display for Size {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
-            Size::MatchParent => write!(f, "max-content"),
+            Size::MatchParent => write!(f, "100%"),
             Size::WrapContent => write!(f, "fit-content"),
             Size::Pixel(p) => write!(f, "{}px", p),
             Size::Percent(p) => write!(f, "{}%", p),

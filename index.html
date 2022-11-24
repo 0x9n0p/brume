@@ -13,12 +13,12 @@
         * {
             padding: 0;
             margin: 0;
+            width: fit-content;
+            height: fit-content;
         }
 
         div {
             display: flex;
-            width: fit-content;
-            height: fit-content;
         }
 
         body {
@@ -29,8 +29,12 @@
         }
 
         .child {
+            width: 500px;
+            height: 200px;
             background-color: white;
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: center;
+            /*align-items: center;*/
         }
 
         .child2 {
@@ -46,25 +50,25 @@
 </head>
 <body>
 
-<div class="child">
-    <p>Child1</p>
-    <div class="child2">
-        <p class="item">Child1</p>
-        <p class="item">Child2</p>
-        <p class="item">Child3</p>
-    </div>
-    <p>Child3</p>
-</div>
+<!--<div class="child">-->
+<!--    <p>Child1</p>-->
+<!--    <div class="child2">-->
+<!--        <p class="item">Child1</p>-->
+<!--        <p class="item">Child2</p>-->
+<!--        <p class="item">Child3</p>-->
+<!--    </div>-->
+<!--    <p>Child3</p>-->
+<!--</div>-->
 
-<div class="child">
-    <p>Child1</p>
-    <div class="child2">
-        <p class="item">Child1</p>
-        <p class="item">Child2</p>
-        <p class="item">Child3</p>
-    </div>
-    <p>Child3</p>
-</div>
+<!--<div class="child">-->
+<!--    <p>Child1</p>-->
+<!--    <div class="child2">-->
+<!--        <p class="item">Child1</p>-->
+<!--        <p class="item">Child2</p>-->
+<!--        <p class="item">Child3</p>-->
+<!--    </div>-->
+<!--    <p>Child3</p>-->
+<!--</div>-->
 
 <script type="module">
     import init, {main} from "./pkg/ui.js";
