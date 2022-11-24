@@ -11,10 +11,10 @@ pub struct Edge {
 impl Edge {
     pub fn new() -> Edge {
         Edge {
-            top: Size::Pixel(0),
-            right: Size::Pixel(0),
-            left: Size::Pixel(0),
-            bottom: Size::Pixel(0),
+            top: Size::Pixel(0.0),
+            right: Size::Pixel(0.0),
+            left: Size::Pixel(0.0),
+            bottom: Size::Pixel(0.0),
         }
     }
 }
@@ -22,7 +22,7 @@ impl Edge {
 pub enum Size {
     MatchParent,
     WrapContent,
-    Pixel(i32),
+    Pixel(f32),
     Percent(i32),
 }
 

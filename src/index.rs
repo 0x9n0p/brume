@@ -15,8 +15,8 @@ impl Page {
 impl page::Page for Page {
     fn body(&self) -> Box<dyn view::Viewable> {
         Body::new(
-            Text::new("hello".to_string())
-            // Button::new("name".to_string())
+            // Text::new("hello".to_string())
+            Button::new("name".to_string())
         ).make()
     }
 }

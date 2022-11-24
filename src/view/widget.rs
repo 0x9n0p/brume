@@ -6,8 +6,9 @@ use wasm_bindgen::JsCast;
 use web_sys;
 use crate::view::{size, style, view};
 use crate::view::size::Size;
-use crate::view::style::{Height, Style};
+use crate::view::style::*;
 use gloo::{events::EventListener, timers::callback::Timeout};
+use crate::view::color::Colors;
 
 pub struct Body {
     child: Box<dyn view::Viewable>,
@@ -26,13 +27,6 @@ impl Body {
 
     pub fn style(mut self, style: impl Style + 'static) -> Body {
         self.styles.insert(style.name(), Box::new(style));
-        self
-    }
-
-    pub fn styles(mut self, styles: Vec<impl Style + 'static>) -> Body {
-        for style in styles {
-            self.styles.insert(style.name(), Box::new(style));
-        }
         self
     }
 
@@ -71,13 +65,6 @@ impl Text {
         self.styles.insert(style.name(), Box::new(style));
         self
     }
-
-    pub fn styles(mut self, styles: Vec<impl Style + 'static>) -> Text {
-        for style in styles {
-            self.styles.insert(style.name(), Box::new(style));
-        }
-        self
-    }
 }
 
 impl view::Viewable for Text {
@@ -111,20 +98,23 @@ impl Button {
             str,
             styles: collections::HashMap::default(),
             html_element: None,
-        }.styles(vec![
-            Height::new(Size::Pixel(50)),
-        ])
+        }
+            .style(Width::new(Size::Pixel(250.0)))
+            .style(Height::new(Size::Pixel(50.0)))
+            .style(Color::new(Colors::White))
+            .style(BackgroundColor::new(Colors::RoyalBlue))
+            .style(BorderRadius::new(Size::Pixel(9.0)))
+            .style(TextTransform::capitalize())
+            .style(Border::none())
+            .style(Outline::none())
+            .style(Padding::block(Size::Pixel(13.0)))
+            .style(FontWeight::new("500"))
+            .style(LetterSpacing::new(Size::Pixel(1.2)))
+            .style(Cursor::pointer())
     }
 
     pub fn style(mut self, style: impl Style + 'static) -> Button {
         self.styles.insert(style.name(), Box::new(style));
-        self
-    }
-
-    pub fn styles(mut self, styles: Vec<impl Style + 'static>) -> Button {
-        for style in styles {
-            self.styles.insert(style.name(), Box::new(style));
-        }
         self
     }
 }
@@ -144,21 +134,6 @@ impl view::Viewable for Button {
             // style.build(&*Rc::clone(&btn))?;
             style.build(&btn)?;
         }
-
-        btn.style().set_property("color", "#FFFFFF");
-        btn.style().set_property("background-color", "royalBlue");
-        btn.style().set_property("border-radius", "9px");
-        btn.style().set_property("text-transform", "capitalize");
-        btn.style().set_property("border", "none");
-        btn.style().set_property("outline", "none");
-        btn.style().set_property("padding-block", "13px");
-        btn.style().set_property("width", "100%");
-        btn.style().set_property("max-width", "250px");
-        // btn.style().set_property("height", "50px");
-        btn.style().set_property("font-weight", "500");
-        btn.style().set_property("letter-spacing", "1.2px");
-        btn.style().set_property("cursor", "pointer");
-        // btn.style().set_property("margin", "auto");
 
         return Ok(btn.clone());
     }
