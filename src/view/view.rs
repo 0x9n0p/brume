@@ -1,8 +1,8 @@
 use wasm_bindgen::JsValue;
-use web_sys::Element;
+use web_sys::{Element, HtmlElement};
 
 pub trait Viewable {
-    fn build(&self, document: &web_sys::Document) -> Result<Element, Error>;
+    fn build(&mut self, document: &web_sys::Document) -> Result<HtmlElement, Error>;
 }
 
 #[derive(Debug)]

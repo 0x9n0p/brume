@@ -4,7 +4,7 @@ mod index;
 
 use window::window::*;
 use view::size::{Size, Edge};
-use view::widget::{Body, Text};
+use view::widget::{Body};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

@@ -11,6 +11,8 @@ crate-type = ["cdylib"]
 [dependencies]
 wasm-bindgen = "0.2"
 thiserror = "1.0.37"
+gloo = "0.8.0"
+gloo-console = "0.2.3"
 
 [dependencies.web-sys]
 version = "0.3.4"
