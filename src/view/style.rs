@@ -1,4 +1,4 @@
-use crate::view::{size, view};
+use crate::view::{font, size, view};
 use crate::view::color;
 
 pub trait Style {
@@ -81,25 +81,25 @@ impl Style for Color {
     }
 }
 
-pub struct BackgroundColor {
+pub struct Background {
     color: color::Colors,
 }
 
-impl BackgroundColor {
-    pub fn new(color: color::Colors) -> BackgroundColor {
-        BackgroundColor {
+impl Background {
+    pub fn color(color: color::Colors) -> Background {
+        Background {
             color,
         }
     }
 }
 
-impl Style for BackgroundColor {
+impl Style for Background {
     fn name(&self) -> &'static str {
-        return "BACKGROUND_COLOR";
+        return "BACKGROUND";
     }
 
     fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
-        element.style().set_property("background-color", &self.color.to_string());
+        element.style().set_property("background", &self.color.to_string());
         return Ok(());
     }
 }
@@ -344,6 +344,10 @@ impl Padding {
     pub fn block(size: size::Size) -> Padding {
         Padding { name: "padding-block", val: size }
     }
+
+    pub fn inline(size: size::Size) -> Padding {
+        Padding { name: "padding-inline", val: size }
+    }
 }
 
 impl Style for Padding {
@@ -395,6 +399,50 @@ impl Style for FontWeight {
     }
 }
 
+pub struct FontSize {
+    name: &'static str,
+    val: String,
+}
+
+impl FontSize {
+    pub fn new(size: size::Size) -> FontSize {
+        FontSize { name: "font-weight", val: size.to_string() }
+    }
+}
+
+impl Style for FontSize {
+    fn name(&self) -> &'static str {
+        return self.name;
+    }
+
+    fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
+        element.style().set_property(self.name, &self.val);
+        return Ok(());
+    }
+}
+
+pub struct FontFamily {
+    name: &'static str,
+    val: String,
+}
+
+impl FontFamily {
+    pub fn new(font: font::Font) -> FontFamily {
+        FontFamily { name: "font-family", val: font.to_string() }
+    }
+}
+
+impl Style for FontFamily {
+    fn name(&self) -> &'static str {
+        return self.name;
+    }
+
+    fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
+        element.style().set_property(self.name, &self.val);
+        return Ok(());
+    }
+}
+
 pub struct LetterSpacing {
     name: &'static str,
     val: String,
@@ -427,6 +475,10 @@ pub struct Cursor {
 }
 
 impl Cursor {
+    pub fn default() -> Cursor {
+        Cursor { name: "cursor", val: "default" }
+    }
+
     pub fn pointer() -> Cursor {
         Cursor { name: "cursor", val: "pointer" }
     }

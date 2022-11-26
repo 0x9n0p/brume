@@ -6,3 +6,4 @@
 - [ ] Responsive support
 - [ ] Add Brume to the crate.io
 - [ ] Linux and Android support
+- [ ] Add theme

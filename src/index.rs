@@ -17,8 +17,10 @@ impl Page for Login {
     fn body(&self) -> Box<dyn view::Viewable> {
         Body::new(
             Column::new()
-                .child(Text::new("Login Page").style(FontWeight::bold()))
-                .child(Button::new("Submit"))
+                // .child(Text::new("Login Page").style(FontWeight::bold()))
+                .child(Button::primary("Primary Button"))
+                .child(Button::text("Text Button"))
+                .child(Button::disabled("Disabled Button"))
         )
             .style(Justify::center())
             .style(Align::center())

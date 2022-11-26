@@ -4,12 +4,13 @@ use std::rc::Rc;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::JsCast;
 use web_sys;
-use crate::view::{size, style, view};
+use crate::view::{font, size, style, view};
 use crate::view::size::Size;
 use crate::view::style::*;
 use gloo::{events::EventListener, timers::callback::Timeout};
 use web_sys::Node;
 use crate::view::color::Colors;
+use crate::view::font::Font;
 
 pub struct Body {
     child: Box<dyn view::Viewable>,
@@ -201,23 +202,43 @@ pub struct Button {
 
 impl Button {
     pub fn new(str: &'static str) -> Button {
+        Button::primary(str)
+    }
+
+    fn prepare(str: &'static str) -> Button {
         Button {
             str,
             styles: collections::HashMap::default(),
             html_element: None,
         }
-            .style(Width::new(Size::Pixel(250.0)))
-            .style(Height::new(Size::Pixel(50.0)))
             .style(Color::new(Colors::White))
-            .style(BackgroundColor::new(Colors::RoyalBlue))
-            .style(BorderRadius::new(Size::Pixel(9.0)))
-            .style(TextTransform::capitalize())
-            .style(Border::none())
-            .style(Outline::none())
-            .style(Padding::block(Size::Pixel(13.0)))
-            .style(FontWeight::new("500"))
-            .style(LetterSpacing::new(Size::Pixel(1.2)))
             .style(Cursor::pointer())
+            .style(Border::none())
+            .style(FontSize::new(Size::Pixel(14.0)))
+            .style(FontFamily::new(Font::SansSerif))
+            .style(TextTransform::uppercase())
+            .style(BorderRadius::new(Size::Pixel(5.0)))
+            .style(Padding::block(Size::Pixel(10.0)))
+            .style(Padding::inline(Size::Pixel(45.0)))
+            .style(FontWeight::new("600"))
+    }
+
+    pub fn primary(str: &'static str) -> Button {
+        Button::prepare(str)
+            .style(Background::color(Colors::Custom("#6979F8")))
+    }
+
+    pub fn text(str: &'static str) -> Button {
+        Button::prepare(str)
+            .style(Color::new(Colors::Custom("#6979F8")))
+            .style(Background::color(Colors::None))
+    }
+
+    pub fn disabled(str: &'static str) -> Button {
+        Button::prepare(str)
+            .style(Color::new(Colors::Lightgray))
+            .style(Cursor::default())
+            .style(Background::color(Colors::Custom("#FBE4E8")))
     }
 
     pub fn style(mut self, style: impl Style + 'static) -> Button {
