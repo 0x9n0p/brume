@@ -1,9 +1,32 @@
+use std::borrow::BorrowMut;
 use crate::view::{font, size, view};
 use crate::view::color;
 
 pub trait Style {
     fn name(&self) -> &'static str where Self: Sized;
     fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error>;
+}
+
+pub struct Custom {
+    name: &'static str,
+    val: &'static str,
+}
+
+impl Custom {
+    pub fn new(name: &'static str, val: &'static str) -> Custom {
+        Custom { name, val }
+    }
+}
+
+impl Style for Custom {
+    fn name(&self) -> &'static str {
+        return self.name;
+    }
+
+    fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
+        element.style().set_property(self.name, &self.val.to_string());
+        return Ok(());
+    }
 }
 
 pub struct Width {
@@ -127,6 +150,35 @@ impl Style for BorderRadius {
     }
 }
 
+pub struct TextDecoration {
+    val: &'static str,
+}
+
+impl TextDecoration {
+    pub fn new(val: &'static str) -> TextDecoration {
+        TextDecoration {
+            val,
+        }
+    }
+
+    pub fn none() -> TextDecoration {
+        TextDecoration {
+            val: "none",
+        }
+    }
+}
+
+impl Style for TextDecoration {
+    fn name(&self) -> &'static str {
+        return "TEXT_DECORATION";
+    }
+
+    fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
+        element.style().set_property("text-decoration", &self.val);
+        return Ok(());
+    }
+}
+
 // TextTransform specifies how to capitalize an element's text.
 pub struct TextTransform {
     val: &'static str,
@@ -187,74 +239,135 @@ impl Style for TextTransform {
     }
 }
 
-pub struct Border {
+pub struct BorderStyle {
+    name: &'static str,
     val: &'static str,
 }
 
-impl Border {
-    pub fn none() -> Border {
-        Border {
-            val: "none"
+impl BorderStyle {
+    pub fn none() -> BorderStyle {
+        BorderStyle {
+            name: "border-style",
+            val: "none",
         }
     }
 
-    pub fn dotted() -> Border {
-        Border {
-            val: "dotted"
+    pub fn dotted() -> BorderStyle {
+        BorderStyle {
+            name: "border-style",
+            val: "dotted",
         }
     }
 
-    pub fn dashed() -> Border {
-        Border {
-            val: "dashed"
+    pub fn dashed() -> BorderStyle {
+        BorderStyle {
+            name: "border-style",
+            val: "dashed",
         }
     }
-    pub fn solid() -> Border {
-        Border {
-            val: "solid"
+    pub fn solid() -> BorderStyle {
+        BorderStyle {
+            name: "border-style",
+            val: "solid",
         }
     }
-    pub fn double() -> Border {
-        Border {
-            val: "double"
+    pub fn double() -> BorderStyle {
+        BorderStyle {
+            name: "border-style",
+            val: "double",
         }
     }
-    pub fn groove() -> Border {
-        Border {
-            val: "groove"
+    pub fn groove() -> BorderStyle {
+        BorderStyle {
+            name: "border-style",
+            val: "groove",
         }
     }
-    pub fn ridge() -> Border {
-        Border {
-            val: "ridge"
+    pub fn ridge() -> BorderStyle {
+        BorderStyle {
+            name: "border-style",
+            val: "ridge",
         }
     }
-    pub fn inset() -> Border {
-        Border {
-            val: "inset"
+    pub fn inset() -> BorderStyle {
+        BorderStyle {
+            name: "border-style",
+            val: "inset",
         }
     }
 
-    pub fn outset() -> Border {
-        Border {
-            val: "outset"
+    pub fn outset() -> BorderStyle {
+        BorderStyle {
+            name: "border-style",
+            val: "outset",
         }
     }
 
-    pub fn hidden() -> Border {
-        Border {
-            val: "hidden"
+    pub fn hidden() -> BorderStyle {
+        BorderStyle {
+            name: "border-style",
+            val: "hidden",
         }
     }
 }
 
-impl Style for Border {
+impl Style for BorderStyle {
     fn name(&self) -> &'static str {
-        return "BORDER";
+        return "BORDER_STYLE";
     }
 
     fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
-        element.style().set_property("border", &self.val);
+        element.style().set_property(self.name, &self.val);
+        return Ok(());
+    }
+}
+
+pub struct BorderWidth {
+    name: &'static str,
+    size: size::Size,
+}
+
+impl BorderWidth {
+    pub fn new(size: size::Size) -> BorderWidth {
+        BorderWidth {
+            name: "border-width",
+            size,
+        }
+    }
+}
+
+impl Style for BorderWidth {
+    fn name(&self) -> &'static str {
+        return "BORDER_WIDTH";
+    }
+
+    fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
+        element.style().set_property("border-width", &self.size.to_string());
+        return Ok(());
+    }
+}
+
+pub struct BorderColor {
+    name: &'static str,
+    color: color::Colors,
+}
+
+impl BorderColor {
+    pub fn new(color: color::Colors) -> BorderColor {
+        BorderColor {
+            name: "border-color",
+            color,
+        }
+    }
+}
+
+impl Style for BorderColor {
+    fn name(&self) -> &'static str {
+        return "BORDER_COLOR";
+    }
+
+    fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
+        element.style().set_property("border-color", &self.color.to_string());
         return Ok(());
     }
 }
@@ -347,6 +460,10 @@ impl Padding {
 
     pub fn inline(size: size::Size) -> Padding {
         Padding { name: "padding-inline", val: size }
+    }
+
+    pub fn left(size: size::Size) -> Padding {
+        Padding { name: "padding-left", val: size }
     }
 }
 

@@ -1,5 +1,6 @@
 use std::borrow::BorrowMut;
 use std::collections;
+use std::ops::Deref;
 use std::rc::Rc;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::JsCast;
@@ -24,7 +25,7 @@ impl Body {
             child: Box::new(child),
             styles: Default::default(),
             html_element: None,
-        }
+        }.style(Background::color(Colors::Custom("#FFFFFF")))
     }
 
     pub fn style(mut self, style: impl Style + 'static) -> Body {
@@ -213,7 +214,7 @@ impl Button {
         }
             .style(Color::new(Colors::White))
             .style(Cursor::pointer())
-            .style(Border::none())
+            .style(BorderStyle::none())
             .style(FontSize::new(Size::Pixel(14.0)))
             .style(FontFamily::new(Font::SansSerif))
             .style(TextTransform::uppercase())
@@ -264,5 +265,170 @@ impl view::Viewable for Button {
         }
 
         return Ok(btn.clone());
+    }
+}
+
+pub struct Link {
+    str: &'static str,
+    address: &'static str,
+    styles: collections::HashMap<&'static str, Box<dyn Style>>,
+    html_element: Option<web_sys::HtmlAnchorElement>,
+}
+
+impl Link {
+    pub fn new(str: &'static str, address: &'static str) -> Link {
+        Link { str, address, styles: Default::default(), html_element: None }
+            // Disabled Style
+            // Color: #D0C9D6
+            // Cursor: default
+            .style(Color::new(Colors::Custom("#3F3356")))
+            .style(TextDecoration::none())
+            .style(FontSize::new(Size::Pixel(16.0)))
+            .style(FontFamily::new(Font::SansSerif))
+            .style(Cursor::pointer())
+    }
+
+    pub fn style(mut self, style: impl Style + 'static) -> Link {
+        self.styles.insert(style.name(), Box::new(style));
+        self
+    }
+}
+
+impl view::Viewable for Link {
+    fn build(&mut self, document: &web_sys::Document) -> Result<web_sys::HtmlElement, view::Error> {
+        self.html_element = match document.create_element("a") {
+            Ok(e) => Some(e.dyn_into::<web_sys::HtmlAnchorElement>().unwrap()),
+            Err(_) => return Err(view::Error::ElementCreation),
+        };
+
+        let l = self.html_element.as_ref().unwrap();
+
+        l.set_text_content(Some(&self.str));
+        l.set_href(self.address);
+
+        for (_, mut style) in &self.styles {
+            style.build(&l)?;
+        }
+
+        return Ok(l.deref().clone());
+    }
+}
+
+pub struct Label {
+    str: &'static str,
+    styles: collections::HashMap<&'static str, Box<dyn Style>>,
+    html_element: Option<web_sys::HtmlElement>,
+}
+
+impl Label {
+    pub fn new(str: &'static str) -> Label {
+        Label { str, styles: Default::default(), html_element: None }
+            .style(FontSize::new(Size::Pixel(16.0)))
+            .style(TextTransform::uppercase())
+            .style(FontFamily::new(Font::SansSerif))
+            .style(BorderRadius::new(Size::Pixel(5.0)))
+            .style(Padding::block(Size::Pixel(8.0)))
+            .style(Padding::inline(Size::Pixel(14.0)))
+            .enable(true)
+    }
+
+    pub fn enable(mut self, is: bool) -> Label {
+        if is {
+            self
+                .style(Color::new(Colors::White))
+                .style(Background::color(Colors::Custom("#BE52F2")))
+        } else {
+            self
+                .style(Color::new(Colors::Custom("#BE52F2")))
+                .style(Background::color(Colors::Custom("#EEDFF2")))
+        }
+    }
+
+    pub fn style(mut self, style: impl Style + 'static) -> Label {
+        self.styles.insert(style.name(), Box::new(style));
+        self
+    }
+}
+
+impl view::Viewable for Label {
+    fn build(&mut self, document: &web_sys::Document) -> Result<web_sys::HtmlElement, view::Error> {
+        self.html_element = match document.create_element("div") {
+            Ok(e) => Some(e.dyn_into::<web_sys::HtmlElement>().unwrap()),
+            Err(_) => return Err(view::Error::ElementCreation),
+        };
+
+        let l = self.html_element.as_ref().unwrap();
+
+        l.set_text_content(Some(&self.str));
+
+        for (_, mut style) in &self.styles {
+            style.build(&l)?;
+        }
+
+        return Ok(l.clone());
+    }
+}
+
+pub struct Input {
+    str: &'static str,
+    pub placeholder: &'static str,
+    pub enabled: bool,
+    styles: collections::HashMap<&'static str, Box<dyn Style>>,
+    html_element: Option<web_sys::HtmlInputElement>,
+}
+
+impl Input {
+    pub fn new(str: &'static str) -> Input {
+        Input { str, placeholder: "", enabled: true, styles: Default::default(), html_element: None }
+            .style(Width::new(Size::Pixel(210.0)))
+            .style(Height::new(Size::Pixel(40.0)))
+            .style(FontSize::new(Size::Pixel(15.0)))
+            .style(TextTransform::capitalize())
+            .style(FontFamily::new(Font::SansSerif))
+            .style(BorderRadius::new(Size::Pixel(5.0)))
+            .style(Padding::left(Size::Pixel(14.0)))
+            .style(BorderStyle::solid())
+            .style(BorderWidth::new(Size::Pixel(2.0)))
+            .style(BorderColor::new(Colors::Custom("#ECE9F1")))
+            .enable(true)
+    }
+
+    pub fn enable(mut self, is: bool) -> Input {
+        self.enabled = is;
+        if is {
+            self
+                .style(Color::new(Colors::Custom("#1A051D")))
+                .style(Background::color(Colors::White))
+        } else {
+            self
+                .style(Color::new(Colors::Custom("#D0C9D6")))
+                .style(Background::color(Colors::Custom("#ECE9F1")))
+        }
+    }
+
+    pub fn style(mut self, style: impl Style + 'static) -> Input {
+        self.styles.insert(style.name(), Box::new(style));
+        self
+    }
+}
+
+impl view::Viewable for Input {
+    fn build(&mut self, document: &web_sys::Document) -> Result<web_sys::HtmlElement, view::Error> {
+        self.html_element = match document.create_element("input") {
+            Ok(e) => Some(e.dyn_into::<web_sys::HtmlInputElement>().unwrap()),
+            Err(_) => return Err(view::Error::ElementCreation),
+        };
+
+        let l = self.html_element.as_ref().unwrap();
+
+        l.set_value(self.str);
+        l.set_placeholder(self.placeholder);
+        l.set_disabled(!self.enabled);
+
+        for (_, mut style) in &self.styles {
+            style.build(&l)?;
+        }
+
+        return Ok(l.deref().clone());
     }
 }

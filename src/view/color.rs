@@ -9,6 +9,7 @@ pub enum Colors {
     Black,
     RoyalBlue,
     Lightgray,
+    Transparent,
     Custom(&'static str),
 }
 
@@ -20,6 +21,7 @@ impl fmt::Display for Colors {
             Colors::Black => write!(f, "black"),
             Colors::RoyalBlue => write!(f, "royalBlue"),
             Colors::Lightgray => write!(f, "lightgray"),
+            Colors::Lightgray => write!(f, "transparent"),
             Colors::Custom(s) => write!(f, "{}", s),
             _ => write!(f, "Color not found")
         }
