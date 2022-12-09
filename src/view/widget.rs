@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 use std::ops::Deref;
+use gloo_console::log;
+use wasm_bindgen::closure::Closure;
 use web_sys;
 use wasm_bindgen::JsCast;
 use crate::view::color::Colors;
@@ -242,18 +244,20 @@ impl Viewable for Text {
 
 pub struct Button {
     str: &'static str,
+    onclick: &'static dyn Fn(),
     styles: HashMap<&'static str, Box<dyn Style>>,
     html_element: Option<web_sys::HtmlElement>,
 }
 
 impl Button {
-    pub fn new(str: &'static str) -> Button {
-        Button::primary(str)
+    pub fn new(str: &'static str, onclick: &'static dyn Fn()) -> Button {
+        Button::primary(str, onclick)
     }
 
-    fn prepare(str: &'static str) -> Button {
+    fn prepare(str: &'static str, onclick: &'static dyn Fn()) -> Button {
         Button {
             str,
+            onclick,
             styles: HashMap::default(),
             html_element: None,
         }
@@ -273,8 +277,8 @@ impl Button {
             })
     }
 
-    pub fn primary(str: &'static str) -> Button {
-        Button::prepare(str)
+    pub fn primary(str: &'static str, onclick: &'static dyn Fn()) -> Button {
+        Button::prepare(str, onclick)
             .apply(&|mut button| {
                 button
                     .style(Background::color(Colors::Custom("#6979F8")));
@@ -282,8 +286,8 @@ impl Button {
             })
     }
 
-    pub fn text(str: &'static str) -> Button {
-        Button::prepare(str)
+    pub fn text(str: &'static str, onclick: &'static dyn Fn()) -> Button {
+        Button::prepare(str, onclick)
             .apply(&|mut button| {
                 button
                     .style(Color::new(Colors::Custom("#6979F8")))
@@ -292,8 +296,8 @@ impl Button {
             })
     }
 
-    pub fn disabled(str: &'static str) -> Button {
-        Button::prepare(str)
+    pub fn disabled(str: &'static str, onclick: &'static dyn Fn()) -> Button {
+        Button::prepare(str, onclick)
             .apply(&|mut button| {
                 button
                     .style(Color::new(Colors::Lightgray))
@@ -326,6 +330,13 @@ impl Viewable for Button {
 
     fn render(&mut self, element: web_sys::HtmlElement, _: &web_sys::Document) -> Result<web_sys::HtmlElement, Error> {
         element.set_text_content(Some(&self.str));
+
+        let callback = Closure::<dyn Fn()>::new(self.onclick);
+        element.add_event_listener_with_callback(
+            "click",
+            callback.as_ref().unchecked_ref(),
+        );
+        callback.forget();
 
         for (_, mut style) in &self.styles {
             // style.build(&*Rc::clone(&btn))?;

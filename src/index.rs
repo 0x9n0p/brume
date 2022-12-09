@@ -1,5 +1,7 @@
+use gloo_console::log;
+use crate::view::color::Colors;
 use crate::view::size::Size;
-use crate::view::style::{Align, Justify, Margin};
+use crate::view::style::{Align, Color, FontWeight, Justify, Margin};
 use crate::view::view::Viewable;
 use crate::view::widget::{Body, Button, Column, Input, Styleable, Title};
 use crate::window::page::Page;
@@ -19,7 +21,7 @@ impl Page for Login {
                 .child(Title::h2("Login"))
                 .child(Input::new("Username"))
                 .child(Input::new("Password"))
-                .child(Button::new("Submit"))
+                .child(Button::new("Submit", &|| { log!("Clicked") }))
         ).apply(&|mut body| {
             body.style(Justify::center())
                 .style(Align::center());
