@@ -1,5 +1,21 @@
 # Brume
 
+![Rust WebAssembly](login.png "Login Page")
+
+```rust
+impl Page for Login {
+    fn body(&self) -> Box<dyn Viewable> {
+        Body::new(
+            Column::new()
+                .child(Title::h2("Login"))
+                .child(Input::new("Username"))
+                .child(Input::new("Password"))
+                .child(Button::new("Submit"))
+        )
+    }
+}
+```
+
 ### TODO
 
 - [x] Add layout widgets. Row, Column
@@ -11,6 +27,7 @@
 - [ ] Add theme
 
 ### Widgets
+
 * Body
 * Column, Row
 * Container WIP
