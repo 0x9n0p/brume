@@ -1,6 +1,7 @@
 use std::fmt;
 use std::fmt::Formatter;
 
+#[derive(Clone)]
 pub struct Edge {
     pub top: Size,
     pub right: Size,
@@ -19,6 +20,7 @@ impl Edge {
     }
 }
 
+#[derive(Clone)]
 pub enum Size {
     MatchParent,
     WrapContent,

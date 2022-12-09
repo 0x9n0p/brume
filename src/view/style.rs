@@ -1,12 +1,11 @@
-use std::borrow::BorrowMut;
-use crate::view::{font, size, view};
-use crate::view::color;
+use crate::view::{font, size, color, view};
 
 pub trait Style {
     fn name(&self) -> &'static str where Self: Sized;
     fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error>;
 }
 
+#[derive(Clone)]
 pub struct Custom {
     name: &'static str,
     val: &'static str,
@@ -29,6 +28,7 @@ impl Style for Custom {
     }
 }
 
+#[derive(Clone)]
 pub struct Width {
     name: &'static str,
     val: size::Size,
@@ -55,6 +55,7 @@ impl Style for Width {
     }
 }
 
+#[derive(Clone)]
 pub struct Height {
     name: &'static str,
     val: size::Size,
@@ -81,6 +82,7 @@ impl Style for Height {
     }
 }
 
+#[derive(Clone)]
 pub struct Color {
     color: color::Colors,
 }
@@ -104,6 +106,8 @@ impl Style for Color {
     }
 }
 
+
+#[derive(Clone)]
 pub struct Background {
     color: color::Colors,
 }
@@ -127,6 +131,7 @@ impl Style for Background {
     }
 }
 
+#[derive(Clone)]
 pub struct BorderRadius {
     size: size::Size,
 }
@@ -150,6 +155,7 @@ impl Style for BorderRadius {
     }
 }
 
+#[derive(Clone)]
 pub struct TextDecoration {
     val: &'static str,
 }
@@ -179,6 +185,7 @@ impl Style for TextDecoration {
     }
 }
 
+#[derive(Clone)]
 // TextTransform specifies how to capitalize an element's text.
 pub struct TextTransform {
     val: &'static str,
@@ -239,6 +246,7 @@ impl Style for TextTransform {
     }
 }
 
+#[derive(Clone)]
 pub struct BorderStyle {
     name: &'static str,
     val: &'static str,
@@ -322,6 +330,7 @@ impl Style for BorderStyle {
     }
 }
 
+#[derive(Clone)]
 pub struct BorderWidth {
     name: &'static str,
     size: size::Size,
@@ -347,6 +356,7 @@ impl Style for BorderWidth {
     }
 }
 
+#[derive(Clone)]
 pub struct BorderColor {
     name: &'static str,
     color: color::Colors,
@@ -372,6 +382,7 @@ impl Style for BorderColor {
     }
 }
 
+#[derive(Clone)]
 pub struct Outline {
     val: &'static str,
 }
@@ -444,6 +455,7 @@ impl Style for Outline {
     }
 }
 
+#[derive(Clone)]
 pub struct Padding {
     name: &'static str,
     val: size::Size,
@@ -478,6 +490,7 @@ impl Style for Padding {
     }
 }
 
+#[derive(Clone)]
 pub struct FontWeight {
     name: &'static str,
     val: &'static str,
@@ -516,6 +529,7 @@ impl Style for FontWeight {
     }
 }
 
+#[derive(Clone)]
 pub struct FontSize {
     name: &'static str,
     val: String,
@@ -538,6 +552,7 @@ impl Style for FontSize {
     }
 }
 
+#[derive(Clone)]
 pub struct FontFamily {
     name: &'static str,
     val: String,
@@ -560,6 +575,7 @@ impl Style for FontFamily {
     }
 }
 
+#[derive(Clone)]
 pub struct LetterSpacing {
     name: &'static str,
     val: String,
@@ -586,6 +602,7 @@ impl Style for LetterSpacing {
     }
 }
 
+#[derive(Clone)]
 pub struct Cursor {
     name: &'static str,
     val: &'static str,
@@ -612,6 +629,7 @@ impl Style for Cursor {
     }
 }
 
+#[derive(Clone)]
 pub(crate) struct ContainerDirection {
     name: &'static str,
     val: &'static str,
@@ -638,6 +656,7 @@ impl Style for ContainerDirection {
     }
 }
 
+#[derive(Clone)]
 pub struct Justify {
     name: &'static str,
     val: &'static str,
@@ -686,6 +705,7 @@ impl Style for Justify {
     }
 }
 
+#[derive(Clone)]
 pub struct Align {
     name: &'static str,
     val: &'static str,

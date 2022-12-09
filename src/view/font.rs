@@ -1,6 +1,7 @@
 use std::fmt;
 use std::fmt::Formatter;
 
+#[derive(Clone)]
 pub enum Font {
     SansSerif,
     Custom(&'static str),

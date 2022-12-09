@@ -3,6 +3,7 @@ use std::fmt::Formatter;
 
 // REFACTOR
 
+#[derive(Clone)]
 pub enum Colors {
     None,
     White,
