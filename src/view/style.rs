@@ -456,6 +456,45 @@ impl Style for Outline {
 }
 
 #[derive(Clone)]
+pub struct Margin {
+    name: &'static str,
+    val: size::Size,
+}
+
+impl Margin {
+    pub fn new(size: size::Size) -> Padding {
+        Padding { name: "margin", val: size }
+    }
+
+    pub fn block(size: size::Size) -> Padding {
+        Padding { name: "margin-block", val: size }
+    }
+
+    pub fn inline(size: size::Size) -> Padding {
+        Padding { name: "margin-inline", val: size }
+    }
+
+    pub fn right(size: size::Size) -> Padding {
+        Padding { name: "margin-left", val: size }
+    }
+
+    pub fn left(size: size::Size) -> Padding {
+        Padding { name: "margin-left", val: size }
+    }
+}
+
+impl Style for Margin {
+    fn name(&self) -> &'static str {
+        return self.name;
+    }
+
+    fn build(&self, element: &web_sys::HtmlElement) -> Result<(), view::Error> {
+        element.style().set_property(self.name, &self.val.to_string());
+        return Ok(());
+    }
+}
+
+#[derive(Clone)]
 pub struct Padding {
     name: &'static str,
     val: size::Size,

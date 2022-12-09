@@ -1,8 +1,7 @@
 use crate::view::size::Size;
-use crate::view::size::Size::{MatchParent, Percent, Pixel};
-use crate::view::view;
-use crate::view::style::{FontWeight, Justify, Width, Height, Padding, Align};
-use crate::view::widget::{Body, Text, Styleable, Column};
+use crate::view::style::{Align, Justify, Margin};
+use crate::view::view::Viewable;
+use crate::view::widget::{Body, Button, Column, Input, Styleable, Title};
 use crate::window::page::Page;
 
 pub(crate) struct Login {}
@@ -14,21 +13,18 @@ impl Login {
 }
 
 impl Page for Login {
-    fn body(&self) -> Box<dyn view::Viewable> {
+    fn body(&self) -> Box<dyn Viewable> {
         Body::new(
             Column::new()
-                .child(Text::new("Login Page"))
-                .child(Text::new("Login Page"))
-            //         // .child(Button::text("Text Button"))
-            //         // .child(Button::disabled("Disabled Button"))
-            //         // .child(Link::new("my link", "address"))
-            //         // .child(Label::new("LABEL"))
-            //         // .child(Label::new("LABEL").enable(false))
-            //         // .child(Input::new("hello").enable(true))
-            //         // .child(Input::new("hello").enable(false))
-        )
-            // .style(Justify::center())
-            // .style(Align::center())
+                .child(Title::h2("Login"))
+                .child(Input::new("Username"))
+                .child(Input::new("Password"))
+                .child(Button::new("Submit"))
+        ).apply(&|mut body| {
+            body.style(Justify::center())
+                .style(Align::center());
+            return body;
+        })
             .make()
     }
 }

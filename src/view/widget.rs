@@ -41,6 +41,10 @@ impl Body {
     pub fn make(self) -> Box<dyn Viewable> {
         return Box::new(self);
     }
+
+    pub fn apply(self, f: &dyn Fn(Body) -> Body) -> Self {
+        f(self)
+    }
 }
 
 impl Styleable for Body {
@@ -264,7 +268,7 @@ impl Button {
                     .style(BorderRadius::new(Size::Pixel(5.0)))
                     .style(Padding::block(Size::Pixel(10.0)))
                     .style(Padding::inline(Size::Pixel(45.0)))
-                    .style(FontWeight::new("600"));
+                    .style(FontWeight::new("500"));
                 return button;
             })
     }
@@ -459,7 +463,6 @@ impl Viewable for Label {
 }
 
 pub struct Input {
-    str: &'static str,
     pub placeholder: &'static str,
     pub enabled: bool,
     styles: HashMap<&'static str, Box<dyn Style>>,
@@ -467,8 +470,8 @@ pub struct Input {
 }
 
 impl Input {
-    pub fn new(str: &'static str) -> Input {
-        Input { str, placeholder: "", enabled: true, styles: Default::default(), html_element: None }
+    pub fn new(placeholder: &'static str) -> Input {
+        Input { placeholder, enabled: true, styles: Default::default(), html_element: None }
             .apply(&|mut input| {
                 input
                     .style(Width::new(Size::Pixel(210.0)))
@@ -523,7 +526,7 @@ impl Viewable for Input {
     fn render(&mut self, element: web_sys::HtmlElement, _: &web_sys::Document) -> Result<web_sys::HtmlElement, Error> {
         let input = element.dyn_into::<web_sys::HtmlInputElement>().unwrap();
 
-        input.set_value(self.str);
+        // input.set_value(self.str);
         input.set_placeholder(self.placeholder);
         input.set_disabled(!self.enabled);
 
@@ -533,5 +536,56 @@ impl Viewable for Input {
 
         self.html_element = Some(input.clone());
         Ok(input.deref().clone())
+    }
+}
+
+pub struct Title {
+    str: &'static str,
+    tag: &'static str,
+    styles: HashMap<&'static str, Box<dyn Style>>,
+    html_element: Option<web_sys::HtmlElement>,
+}
+
+impl Title {
+    pub fn h2(str: &'static str) -> Title {
+        Title { str, tag: "h2", styles: Default::default(), html_element: None }
+            .apply(&|mut title| {
+                title.style(Color::new(Colors::Black))
+                    .style(FontSize::new(Size::Pixel(22.0)))
+                    .style(FontFamily::new(Font::SansSerif));
+                return title;
+            })
+    }
+
+    pub fn apply(self, f: &dyn Fn(Title) -> Title) -> Self {
+        f(self)
+    }
+}
+
+impl Styleable for Title {
+    fn store_style(&mut self, style: impl Style + 'static) {
+        self.styles.insert(style.name(), Box::new(style));
+    }
+}
+
+impl Viewable for Title {
+    fn get_tag(&self) -> &'static str { return self.tag; }
+
+    fn get_html_element(&mut self) -> Option<&web_sys::HtmlElement> {
+        match &self.html_element {
+            Some(e) => { Some(e) }
+            None => None
+        }
+    }
+
+    fn render(&mut self, element: web_sys::HtmlElement, _: &web_sys::Document) -> Result<web_sys::HtmlElement, Error> {
+        element.set_text_content(Some(&self.str));
+
+        for (_, mut style) in &self.styles {
+            style.build(&element)?;
+        }
+
+        self.html_element = Some(element.clone());
+        Ok(element)
     }
 }
